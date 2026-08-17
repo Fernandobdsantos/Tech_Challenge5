@@ -1,0 +1,25 @@
+# --- Ambiente Virtual ---
+venv/
+env/
+ENV/
+
+# --- Arquivos temporários do Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.spec
+
+# --- MLflow (Logs e banco de dados locais) ---
+mlruns/
+mlflow.db
+mlflow.sqlite
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints/
+
+# --- Sistema operacional ---
+.DS_Store
+Thumbs.db
+*.swp
