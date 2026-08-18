@@ -1,16 +1,40 @@
 # Processamento de Dados e ML
+
 pandas==2.2.2
+
 numpy==1.26.4
+
 scikit-learn==1.4.2
+
 yfinance==0.2.37
+
 joblib==1.4.0
 
+
+
 # Deep Learning
+
 tensorflow==2.16.1
 
+
+
 # API
+
 fastapi==0.111.0
+
 uvicorn==0.29.0
 
-# MLOps (Usaremos nos próximos passos)
+
+
+# MLOps
+
 mlflow==2.12.1
+
+
+
+# Monitoramento
+
+prometheus-client==0.21.1
+
+psutil==6.1.0 
+
