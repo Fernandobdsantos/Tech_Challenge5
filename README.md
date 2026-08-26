@@ -45,7 +45,7 @@ Tech_Challenge5/
 ├── Dockerfile              # Receita para empacotamento da aplicação
 ├── Makefile                # Automação de comandos do pipeline
 └── requirements.txt        # Dependências do projeto fixadas por versão (incluindo Prometheus e psutil)
-
+```
 
 
 🛠️ Como Executar o Projeto:
