@@ -46,7 +46,9 @@ Tech_Challenge5/
 ├── Makefile                # Automação de comandos do pipeline
 └── requirements.txt        # Dependências do projeto fixadas por versão (incluindo Prometheus e psutil)
 
-🛠️ Como Executar o Projeto
+
+
+🛠️ Como Executar o Projeto:
 Você pode rodar o projeto de duas formas: nativamente via ambiente virtual ou de maneira isolada utilizando o Docker.
 
 Pré-requisitos
