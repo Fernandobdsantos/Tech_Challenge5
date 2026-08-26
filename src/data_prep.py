@@ -51,11 +51,11 @@ def prepare_data(dataset):
 
     X_train, y_train = create_sequences(train_scaled, PREDICTION_DAYS)
     
-    # Para o teste, precisamos do pedaço anterior para criar as primeiras janelas
+
     inputs_test = np.concatenate((train_scaled[-PREDICTION_DAYS:], test_scaled), axis=0)
     X_test, y_test = create_sequences(inputs_test, PREDICTION_DAYS)
 
-    # Reshape para formato 3D do LSTM [samples, time_steps, features]
+
     X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
     X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
 
@@ -71,10 +71,10 @@ def main():
     np.save(os.path.join(DATA_DIR, 'y_train.npy'), y_train)
     np.save(os.path.join(DATA_DIR, 'X_test.npy'), X_test)
     np.save(os.path.join(DATA_DIR, 'y_test.npy'), y_test)
-    np.save(os.path.join(DATA_DIR, 'actual_prices.npy'), test_data_raw) # Para avaliação final
+    np.save(os.path.join(DATA_DIR, 'actual_prices.npy'), test_data_raw) 
 
     print(f"Dados salvos em {DATA_DIR}. Treino shape: {X_train.shape}")
 
 if __name__ == "__main__":
-    import pandas as pd # Importado aqui para evitar conflito escopo
+    import pandas as pd 
     main()

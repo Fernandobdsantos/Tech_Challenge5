@@ -1,6 +1,9 @@
 # 🚀 Tech Challenge Fase 5 - MLOps & Engenharia de Machine Learning
 
-Este repositório apresenta a evolução do modelo de Deep Learning desenvolvido na Fase 4, agora transformado em um **produto de software automatizado, monitorado e conteinerizado** sob os princípios de **MLOps** (Machine Learning Operations). O objetivo é prever o preço de fechamento diário das ações da Petrobras (`PETR4.SA`) utilizando uma rede neural LSTM.
+Este repositório apresenta o desenvolvimento de um modelo preditivo de Deep Learning estruturado como um **produto de software automatizado, monitorado e conteinerizado** sob os princípios de **MLOps** (Machine Learning Operations). O objetivo é prever o preço de fechamento diário das ações da Petrobras (`PETR4.SA`) utilizando uma rede neural LSTM.
+
+🔗 **Repositório GitHub:** [https://github.com/Fernandobdsantos/Tech_Challenge5](https://github.com/Fernandobdsantos/Tech_Challenge5)  
+🔗 **API em Produção (Render):** [https://tech-challenge-5.onrender.com/docs](https://tech-challenge-5.onrender.com/docs)
 
 ---
 
@@ -15,9 +18,10 @@ Diferente de ambientes exploratórios (como Jupyter Notebooks), esta solução a
 2. **Rastreamento de Experimentos (MLflow):**
    * O pipeline de treinamento está totalmente integrado ao MLflow, registrando automaticamente hiperparâmetros (épocas, tamanho de lote) e métricas de avaliação (MAE, RMSE, MAPE) a cada execução, além de versionar os artefatos de modelo (`.keras`).
 
-3. **API de Alta Performance (FastAPI):**
+3. **API de Alta Performance e Monitoramento (FastAPI & Prometheus):**
    * Desenvolvida com validação estrita de dados (`Pydantic`) para garantir o contrato de entrada (exigência exata de 60 observações históricas).
    * Carregamento otimizado: os artefatos (modelo treinado e scaler) são carregados na memória apenas na inicialização (`startup`), garantindo baixíssima latência nas respostas.
+   * **Observabilidade em Produção:** Endpoints adicionais de monitoramento (`/health` para verificação de saúde e consumo de recursos, e `/metrics` para exposição de métricas no padrão Prometheus).
 
 4. **Containerização e Orquestração (Docker & Makefile):**
    * **Docker:** Garante o isolamento completo de ambiente, permitindo que a aplicação execute de forma idêntica em qualquer sistema operacional ou servidor de nuvem.
@@ -30,8 +34,7 @@ Diferente de ambientes exploratórios (como Jupyter Notebooks), esta solução a
 ```text
 Tech_Challenge5/
 ├── api/
-│   ├── app.py              # Servidor e endpoints da API (FastAPI)
-│   └── schemas.py          # Contratos de validação de dados (Pydantic)
+│   └── app.py              # Servidor, endpoints da API, inferência e monitoramento (FastAPI)
 ├── data/                   # Diretório de dados processados
 ├── models/                 # Artefatos serializados (modelo .keras e scaler .pkl)
 ├── src/
@@ -41,7 +44,7 @@ Tech_Challenge5/
 ├── .gitignore              # Arquivos ignorados pelo Git
 ├── Dockerfile              # Receita para empacotamento da aplicação
 ├── Makefile                # Automação de comandos do pipeline
-└── requirements.txt        # Dependências do projeto fixadas por versão
+└── requirements.txt        # Dependências do projeto fixadas por versão (incluindo Prometheus e psutil)
 
 🛠️ Como Executar o Projeto
 Você pode rodar o projeto de duas formas: nativamente via ambiente virtual ou de maneira isolada utilizando o Docker.
@@ -54,29 +57,30 @@ Docker Desktop rodando em segundo plano (caso opte pelo contêiner).
 Opção A: Execução Nativa (Pipeline Completo)
 Crie e ative o ambiente virtual:
 
+Bash
 python -m venv venv
 # No Windows (PowerShell):
 .\venv\Scripts\Activate.ps1
 # No Linux/Mac:
 source venv/bin/activate
-
 Instale as dependências:
 
+Bash
 make setup
 # Ou manualmente: pip install -r requirements.txt
-
 Execute a preparação dos dados:
 
+Bash
 make data
 # Ou: python src/data_prep.py
-
 Treine o modelo (registra no MLflow e salva os artefatos):
 
+Bash
 make train
 # Ou: python src/train.py
-
 Inicie a API localmente:
 
+Bash
 make api
 # Ou: uvicorn api.app:app --reload
 
@@ -85,26 +89,28 @@ Para simular o deploy em um ambiente corporativo conteinerizado:
 
 Construa a imagem Docker:
 
+Bash
 make docker-build
 # Ou: docker build -t tech-challenge-5:latest .
-
 Execute o contêiner:
 
+Bash
 make docker-run
 # Ou: docker run -p 8000:8000 tech-challenge-5:latest
-
 Com a aplicação rodando (seja via Uvicorn ou Docker), acesse a documentação interativa da API (Swagger) em:
 
-👉 http://localhost:8000/docs
+👉 http://localhost:8000/docs (ou utilize o link público no Render).
 
-🔌 Consumindo a API (POST /predict)
+🔌 Endpoints da API
+1. Consumindo a API (POST /predict)
 A API espera um payload JSON contendo um array unidimensional com exatamente 60 valores numéricos representando o histórico de preços de fechamento.
 
-URL: http://localhost:8000/predict
+URL: /predict
 
 Método: POST
 
 Exemplo de Requisição (Payload):
+
 JSON
 {
   "historical_data": [
@@ -117,9 +123,15 @@ JSON
   ]
 }
 Exemplo de Resposta:
+
 JSON
 {
   "predicted_price": 36.98,
   "currency": "BRL",
   "symbol": "PETR4.SA"
 }
+2. Verificação de Saúde (GET /health)
+Retorna o status operacional da API, confirma se os artefatos foram carregados e reporta métricas de uso de CPU e memória RAM.
+
+3. Métricas de Produção (GET /metrics)
+Expõe as métricas da aplicação no formato padrão do Prometheus para observabilidade em produção.

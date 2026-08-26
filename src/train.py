@@ -68,8 +68,7 @@ def main():
         scaler = joblib.load(os.path.join(MODEL_DIR, 'scaler.pkl'))
         predictions = scaler.inverse_transform(predictions_scaled)
 
-        # Como pegamos 60 dias de janela para o teste, o tamanho das previsões será igual
-        # ao tamanho do actual_prices, mas vamos garantir que tenham o mesmo shape
+
         min_len = min(len(actual_prices), len(predictions))
         actual_prices = actual_prices[-min_len:]
         predictions = predictions[-min_len:]
@@ -82,7 +81,7 @@ def main():
         mlflow.log_metric("rmse", rmse)
         mlflow.log_metric("mape", mape)
 
-        # 6. Salvar o modelo (formato moderno .keras e no MLflow)
+        # 6. Salvar o modelo 
         model_path = os.path.join(MODEL_DIR, 'modelo_lstm_petr4.keras')
         model.save(model_path)
         mlflow.keras.log_model(model, "modelo_lstm")
