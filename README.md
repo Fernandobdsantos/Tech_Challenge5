@@ -48,39 +48,45 @@ Tech_Challenge5/
 ```
 
 
-🛠️ Como Executar o Projeto:
+---
+
+## 🛠️ Como Executar o Projeto
+
 Você pode rodar o projeto de duas formas: nativamente via ambiente virtual ou de maneira isolada utilizando o Docker.
 
-Pré-requisitos
-Python 3.12+ instalado.
+### Pré-requisitos
+* Python 3.12+ instalado.
+* Docker Desktop rodando em segundo plano (caso opte pelo contêiner).
 
-Docker Desktop rodando em segundo plano (caso opte pelo contêiner).
+### Opção A: Execução Nativa (Pipeline Completo)
 
-Opção A: Execução Nativa (Pipeline Completo)
-Crie e ative o ambiente virtual:
-
-Bash
-python -m venv venv
-# No Windows (PowerShell):
-.\venv\Scripts\Activate.ps1
-# No Linux/Mac:
-source venv/bin/activate
-Instale as dependências:
+1. **Crie e ative o ambiente virtual:**
+   ```bash
+   python -m venv venv
+   # No Windows (PowerShell):
+   .\venv\Scripts\Activate.ps1
+   # No Linux/Mac:
+   source venv/bin/activate
+   
+1. Instale as dependências:
 
 Bash
 make setup
 # Ou manualmente: pip install -r requirements.txt
-Execute a preparação dos dados:
+
+2. Execute a preparação dos dados:
 
 Bash
 make data
 # Ou: python src/data_prep.py
-Treine o modelo (registra no MLflow e salva os artefatos):
+
+3. Treine o modelo (registra no MLflow e salva os artefatos):
 
 Bash
 make train
 # Ou: python src/train.py
-Inicie a API localmente:
+
+4. Inicie a API localmente:
 
 Bash
 make api
@@ -89,16 +95,18 @@ make api
 Opção B: Execução via Docker (Padrão de Produção)
 Para simular o deploy em um ambiente corporativo conteinerizado:
 
-Construa a imagem Docker:
+1. Construa a imagem Docker:
 
 Bash
 make docker-build
 # Ou: docker build -t tech-challenge-5:latest .
-Execute o contêiner:
+
+2. Execute o contêiner:
 
 Bash
 make docker-run
 # Ou: docker run -p 8000:8000 tech-challenge-5:latest
+
 Com a aplicação rodando (seja via Uvicorn ou Docker), acesse a documentação interativa da API (Swagger) em:
 
 👉 http://localhost:8000/docs (ou utilize o link público no Render).
@@ -113,7 +121,6 @@ Método: POST
 
 Exemplo de Requisição (Payload):
 
-JSON
 {
   "historical_data": [
     35.1, 35.2, 35.5, 34.9, 35.0, 35.3, 35.6, 35.8, 36.0, 36.1,
@@ -124,16 +131,18 @@ JSON
     39.8, 39.5, 39.7, 40.1, 40.4, 40.6, 40.8, 40.5, 40.2, 40.5
   ]
 }
+
 Exemplo de Resposta:
 
-JSON
 {
   "predicted_price": 36.98,
   "currency": "BRL",
   "symbol": "PETR4.SA"
 }
 2. Verificação de Saúde (GET /health)
+
 Retorna o status operacional da API, confirma se os artefatos foram carregados e reporta métricas de uso de CPU e memória RAM.
 
 3. Métricas de Produção (GET /metrics)
+
 Expõe as métricas da aplicação no formato padrão do Prometheus para observabilidade em produção.
